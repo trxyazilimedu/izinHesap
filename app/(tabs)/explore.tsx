@@ -1,102 +1,219 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Platform, Linking, useColorScheme } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-export default function TabTwoScreen() {
+const DeveloperInfo = ({ icon, label, value, isLink = false }) => {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const handlePress = () => {
+    if (isLink && value) {
+      if (label === 'Instagram') {
+        Linking.openURL(`https://instagram.com/${value.replace('@', '')}`);
+      } else if (label === 'Email') {
+        Linking.openURL(`mailto:${value}`);
+      } else if (label === 'Phone') {
+        Linking.openURL(`tel:${value}`);
+      }
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
+      <ThemedView style={[styles.infoContainer, isDark && styles.infoContainerDark]}>
+        <Ionicons
+            name={icon}
+            size={24}
+            style={[styles.icon, isDark && styles.iconDark]}
+        />
+        <ThemedView style={styles.infoContent}>
+          <ThemedText style={[styles.label, isDark && styles.labelDark]}>
+            {label}
           </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
+          <ThemedText
+              style={[
+                styles.value,
+                isDark && styles.valueDark,
+                isLink && (isDark ? styles.linkDark : styles.link)
+              ]}
+              onPress={handlePress}
+          >
+            {value}
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+  );
+};
+
+export default function DeveloperProfileScreen() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const developerData = {
+    name: 'Yusuf Özbaş',
+    title: 'Web Software Developer',
+    email: 'yusufozbas7@gmail.com',
+    phone: '+90 555 605 4022',
+    instagram: '@yusuf.css',
+    location: 'Kırşehir, Turkey',
+    bio: 'Ahi Evran University Computer Programing student. I am interested in web technologies and software development. I am a software developer who loves to learn and share.',
+  };
+
+  return (
+      <ParallaxScrollView
+          headerBackgroundColor={{ light: '#4F46E5', dark: '#1F2937' }}
+          headerImage={
+            <Ionicons
+                size={200}
+                name="person-circle"
+                style={[styles.headerImage, isDark && styles.headerImageDark]}
+            />
+          }>
+        <ThemedView style={[styles.profileContainer, isDark && styles.profileContainerDark]}>
+          <ThemedText style={[styles.name, isDark && styles.nameDark]}>
+            {developerData.name}
+          </ThemedText>
+          <ThemedText style={[styles.title, isDark && styles.titleDark]}>
+            {developerData.title}
+          </ThemedText>
+
+          <ThemedView style={[styles.bioContainer, isDark && styles.bioContainerDark]}>
+            <ThemedText style={[styles.bio, isDark && styles.bioDark]}>
+              {developerData.bio}
             </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+          </ThemedView>
+
+          <ThemedView style={styles.infoSection}>
+            <DeveloperInfo
+                icon="mail-outline"
+                label="Email"
+                value={developerData.email}
+                isLink
+            />
+            <DeveloperInfo
+                icon="call-outline"
+                label="Phone"
+                value={developerData.phone}
+                isLink
+            />
+            <DeveloperInfo
+                icon="logo-instagram"
+                label="Instagram"
+                value={developerData.instagram}
+                isLink
+            />
+            <DeveloperInfo
+                icon="location-outline"
+                label="Location"
+                value={developerData.location}
+            />
+          </ThemedView>
+        </ThemedView>
+      </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
+    color: '#FFFFFF',
+    opacity: 0.9,
+    bottom: -50,
+    alignSelf: 'center',
     position: 'absolute',
   },
-  titleContainer: {
+  headerImageDark: {
+    color: '#E5E7EB',
+  },
+  profileContainer: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  profileContainerDark: {
+    backgroundColor: '#111827',
+  },
+  name: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 4,
+    color: '#111827',
+  },
+  nameDark: {
+    color: '#F9FAFB',
+  },
+  title: {
+    fontSize: 18,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  titleDark: {
+    color: '#9CA3AF',
+  },
+  bioContainer: {
+    backgroundColor: '#F3F4F6',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 24,
+  },
+  bioContainerDark: {
+    backgroundColor: '#1F2937',
+  },
+  bio: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'center',
+    color: '#4B5563',
+  },
+  bioDark: {
+    color: '#D1D5DB',
+  },
+  infoSection: {
+    gap: 16,
+  },
+  infoContainer: {
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    backgroundColor: '#F9FAFB',
+    padding: 16,
+    borderRadius: 12,
+  },
+  infoContainerDark: {
+    backgroundColor: '#1F2937',
+  },
+  icon: {
+    color: '#4F46E5',
+    marginRight: 12,
+  },
+  iconDark: {
+    color: '#6366F1',
+  },
+  infoContent: {
+    flex: 1,
+  },
+  label: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  labelDark: {
+    color: '#9CA3AF',
+  },
+  value: {
+    fontSize: 16,
+    color: '#111827',
+  },
+  valueDark: {
+    color: '#F9FAFB',
+  },
+  link: {
+    color: '#4F46E5',
+    textDecorationLine: 'underline',
+  },
+  linkDark: {
+    color: '#818CF8',
+    textDecorationLine: 'underline',
   },
 });
